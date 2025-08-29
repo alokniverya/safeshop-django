@@ -157,3 +157,10 @@ EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
+
+if os.environ.get("RENDER", ""):
+    try:
+        from .create_superuser import *
+    except Exception as e:
+        print("Superuser creation skipped:", e)
