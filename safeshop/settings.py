@@ -86,15 +86,11 @@ AUTH_USER_MODEL = 'accounts.Account'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=config(
-            "DATABASE_URL",
-            default="postgresql://safeshopdb_user:Pynej0Yhlmfjvtwcm14CRdtvhkYHiqya@dpg-d2ov708gjchc73f8rl80-a/safeshopdb"
-        ),
+        default=os.getenv('DATABASE_URL'),
         conn_max_age=600,
         ssl_require=True
     )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
