@@ -18,6 +18,7 @@ from carts.models import Cart, CartItem
 from orders. models import Order, OrderProduct
 import requests
 # Create your views here.
+import traceback
 
 def register(request):
     if request.method == 'POST':
@@ -55,6 +56,8 @@ def register(request):
             # # messages.success(request, 'Sent a verification link to your mail. Please verify it.')
             # return redirect('/accounts/login/?command=verification&email='+email)
             # User_Activation
+           
+
             try:
                 current_site = get_current_site(request)
                 mail_subject = 'Please activate your account.'
@@ -67,13 +70,11 @@ def register(request):
                 to_email = email
                 send_email = EmailMessage(mail_subject, message, to=[to_email])
                 send_email.send()
-                # messages.success(request, 'Sent a verification link to your mail. Please verify it.')
             except Exception as e:
-                print(f"Email sending failed: {e}")
-                # Optional: You can show a friendly message or log this error
-                # messages.warning(request, 'Registration successful, but email could not be sent.')
-
+                print("Email sending failed:")
+                traceback.print_exc()  # This prints the full error in Render logs
             return redirect('/accounts/login/?command=verification&email=' + email)
+
 
     else:
         form = RegistrationForm()
