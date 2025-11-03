@@ -40,20 +40,41 @@ def register(request):
             profile.profile_picture = 'default/default-user.png'
             profile.save()
 
-            #User_Activation
-            current_site = get_current_site(request)
-            mail_subject = 'Please activate you account.'
-            message = render_to_string('accounts/account_verification_email.html', {
-                'user': user,
-                'domain': current_site,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': default_token_generator.make_token(user),
-            })
-            to_email = email
-            send_email = EmailMessage(mail_subject, message, to =[to_email])
-            send_email.send()
-            # messages.success(request, 'Sent a verification link to your mail. Please verify it.')
-            return redirect('/accounts/login/?command=verification&email='+email)
+            # #User_Activation
+            # current_site = get_current_site(request)
+            # mail_subject = 'Please activate you account.'
+            # message = render_to_string('accounts/account_verification_email.html', {
+            #     'user': user,
+            #     'domain': current_site,
+            #     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            #     'token': default_token_generator.make_token(user),
+            # })
+            # to_email = email
+            # send_email = EmailMessage(mail_subject, message, to =[to_email])
+            # send_email.send()
+            # # messages.success(request, 'Sent a verification link to your mail. Please verify it.')
+            # return redirect('/accounts/login/?command=verification&email='+email)
+            # User_Activation
+            try:
+                current_site = get_current_site(request)
+                mail_subject = 'Please activate your account.'
+                message = render_to_string('accounts/account_verification_email.html', {
+                    'user': user,
+                    'domain': current_site,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': default_token_generator.make_token(user),
+                })
+                to_email = email
+                send_email = EmailMessage(mail_subject, message, to=[to_email])
+                send_email.send()
+                # messages.success(request, 'Sent a verification link to your mail. Please verify it.')
+            except Exception as e:
+                print(f"Email sending failed: {e}")
+                # Optional: You can show a friendly message or log this error
+                # messages.warning(request, 'Registration successful, but email could not be sent.')
+
+            return redirect('/accounts/login/?command=verification&email=' + email)
+
     else:
         form = RegistrationForm()
     context = {
